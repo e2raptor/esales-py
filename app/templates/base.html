@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>E-VENTAS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/boostrap/css/bootstrap.css" rel="stylesheet">
+    <link href="static/boostrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="static/boostrap/css/docs.css" rel="stylesheet">
+    <link href="static/boostrap/js/google-code-prettify/prettify.css" rel="stylesheet">
+
+    <script type="text/javascript" src="static/js/jquery.js"></script>
+    <script type="text/javascript" src="static/boostrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="static/js/angular.min.js"></script>
+    <style>
+    .contain {margin-left:2%;
+              margin-right:2%}
+    #header{padding-left:2%;background-color:#DDD}
+    </style>
+    <link href="../boostrap-responsive.css" rel="stylesheet">
+  </head>
+  <script type="text/javascript" charset="utf-8">
+    {{server}}
+    document.onkeydown = function getcode(ev) {
+        value = (window.external) ? event.keyCode : ev.keyCode;
+        var code = {
+            '112': 'ventas', //F1
+            '113': 'clientes', //F2
+            '114': 'productos', //F3
+            '115': 'inventario', //F4
+        }
+        if (code[value]!= undefined){
+            var server = "{{server}}";
+            window.location = server.concat(code[value]);
+        }
+    }
+
+        //Begining of the AngularJS Module
+        var eventas = angular.module('E-VENTAS', []);
+
+        //This configuration allows AngularJS and Jinja2 work together
+        eventas.config(['$interpolateProvider', function($interpolateProvider) {
+          $interpolateProvider.startSymbol('{[');
+          $interpolateProvider.endSymbol(']}');
+        }]);
+  </script>
+
+  <body ng-app="E-VENTAS" style="padding-top:0px">
+    <!-- Header 
+    ================================================== -->      
+    <div class="jumbotron" style="height:25px;padding-top:5px">
+        <div id="" align="left" style="padding-left:25px">
+            <h2 id="heading">PUNTO DE VENTA</h2>
+        </div>
+    </div>
+
+    <!-- Menu BAR
+    ================================================== -->      
+    <div id="name" style="margin-bottom:10px;padding:5px;background-color:#DDD;">
+            <a class="btn" href="ventas"><i class="icon-shopping-cart"></i> F1 Ventas</a>
+            <a class="btn" href="clientes"><i class="icon-user"></i> F2 Clientes</a>
+            <a class="btn" href="productos"><i class="icon-th"></i> F3 Productos</a>
+            <a class="btn" href="#"><i class="icon-th-list"></i> F4 Inventario</a>
+    </div>
+
+    <div class="contain">
+        {% block body %}{% endblock %}
+    </div> <!-- /container -->
+
+    <script type="text/javascript" charset="utf-8">
+
+
+        
+    </script>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster
+    -->
+    <script src="../static/boostrap/css/js/bootstrap-transition.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-alert.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-modal.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-dropdown.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-scrollspy.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-tab.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-tooltip.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-popover.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-button.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-collapse.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-carousel.js"></script>
+    <script src="../static/boostrap/css/js/bootstrap-typeahead.js"></script>
+
+
+  </body>
+</html>
+

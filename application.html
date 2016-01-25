@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Start</title>
+    <script type="text/javascript" src="server.js"> </script>
+    <script type="text/javascript">
+  	  var platform = require("os").platform; 	  
+    </script>
+    <style>
+        body {
+        background: #272822;
+        color: #FFF;
+        font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+        cursor: default;
+        }    
+    </style>
+  </head>
+  <body>
+    <h1>Loading...</h1>
+    We are using node.js <script>document.write(process.version)</script>.<br/>
+    platform: <script>document.write(platform())</script>.<br/>
+    status: <span id="status">status</span>
+
+    <script type="text/javascript" charset="utf-8">
+        var pyexec = '/usr/bin/python';
+        if (platform() == 'win32')
+        {
+            var pyexec = 'py.exe';
+        }
+        var gui = require('nw.gui');
+        var win = gui.Window.get();
+        win.on('loaded', function() {
+            console.log('New window is loaded');
+            StartWSGI(pyexec);
+    });
+        
+    </script>
+  </body>
+</html>

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block body %}
+<script type="text/javascript" src="../static/js/product_controller.js"></script>
+<div ng-controller="ProductController">
+    <!--TAB SECTION-->
+    <div class="alert alert-info">
+       <b> GESTIÓN DE PRODUCTOS </b>
+    </div>
+    <ul class="nav nav-tabs">
+      <li ng-class="classNuevo">
+        <a ng-href="#" data-ng-click="ui('active',true,'',false)">Nuevo Producto</a>
+      </li>
+      <li ng-class="classLista">
+        <a href="#" data-ng-click="ui('',false,'active',true)">Listado</a>
+    </ul>
+    <!--PRODUCTO NUEVO-->
+    <div class="well" ng-show="divNuevo">
+        <form class="form-horizontal">
+            <table cellpadding="3">
+                <tr>
+                    <td>Código de Barra: </td>
+                    <td>
+                        <div class="input-prepend input-append">
+                          <span class="add-on"><b>||</b>|<b>|</b>|</span>
+                          <input class="span2" ng-model="inputCodigoBarra" type="number" >
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Descripción:</td>
+                    <td>
+                      <input type="text" 
+                            ng-model="inputDecripcion" 
+                            class="input-xxlarge" 
+                            required="required"
+                            placeholder="Entre el nombre/descripción de producto">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Precio Costo:</td>
+                    <td>
+                        <div class="input-prepend input-append">
+                          <span class="add-on">$</span>
+                          <input class="span2" ng-model="inputPrecioCosto" type="number" step="0.01" >
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Precio Venta:</td>
+                    <td>
+                        <div class="input-prepend input-append">
+                          <span class="add-on">$</span>
+                          <input class="span2" ng-model="inputPrecioVenta" type="number" step="0.01" >
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Precio Mayoreo:</td>
+                    <td>
+                        <div class="input-prepend input-append">
+                          <span class="add-on">$</span>
+                          <input class="span2" ng-model="inputPrecioMayoreo" type="number" step="0.01" >
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Lleva inventario?:</td>
+                    <td><input ng-model="inputPrecioMayoreo" 
+                                style="margin-left:5px"
+                                data-ng-click="showInv=!showInv"
+                                type="checkbox" >
+                    </td>
+                </tr>
+                <tr ng-show="showInv">
+                    <td>Cantidad Actual:</td>
+                    <td>
+                      <input class="span2" ng-model="inputStockActual" type="number" >
+                    </td>
+                </tr>
+                <tr ng-show="showInv">
+                    <td>Cantidad Mínima:</td>
+                    <td>
+                      <input class="span2" ng-model="inputStockMinimo" type="number" >
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-primary" type="submit">Guardar Producto</button>
+                    </td>
+                    <td><button class="btn" type="clean">Limpiar</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--LISTA NUEVO-->
+    <div ng-show="divLista" ng-cloak>
+        <!--Search-->
+        <div class="well">
+            <input type="text" 
+                    class="span3 search-query" 
+                    ng-model="search_filter"
+                    placeholder="Teclee para filtrar el producto">
+        </div>
+        <!--Results-->
+        <div style="overflow: auto; height:250px">
+         <table class="table table-bordered table-striped table-condensed table-hover">
+                <thead>
+                    <tr style="background-color:#FFF6A7">
+                        <th class="id" custom-sort order="'id'" sort="sort">Código&nbsp;</th>
+                        <th class="name" custom-sort order="'name'" sort="sort">Descripción&nbsp;</th>
+                        <th class="description" custom-sort order="'description'" sort="sort">P. Venta&nbsp;</th>
+                        <th class="field3" custom-sort order="'field3'" sort="sort">P. Costo&nbsp;</th>
+                        <th class="field4" custom-sort order="'field4'" sort="sort">Cant&nbsp;</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <!--tfoot ng-class="{hidden: pagedItems.length == 1}">
+                    <td colspan="7">
+                        <div class="pagination pull-right">
+                            <ul>
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href ng-click="prevPage()">« Ant.</a>
+                                </li>
+                            
+                                <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                                    ng-class="{active: n == currentPage}"
+                                    ng-click="setPage()">
+                                    <a href ng-bind="n + 1">1</a>
+                                </li>
+                             
+                                <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                                    <a href ng-click="nextPage()">Sig. »</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tfoot-->
+                <tbody >
+                    <tr ng-repeat="p in items| orderBy:sort.sortingOrder:sort.reverse | filter: search_filter">
+                        <td>{[p.id]}</td>
+                        <td>{[p.name]}</td>
+                        <td>{[p.description]}</td>
+                        <td>{[p.field3]}</td>
+                        <td>{[p.field4]}</td>
+                        <td>
+                            <a class="badge badge-success" ng-click="editProduct(p.id)" data-target="#myModal" data-toggle="modal">
+                                    <i class="icon-edit icon-white"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="badge badge-important" ng-click="deleteProduct(p.id)">
+
+                                    <i class="icon-trash icon-white"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+    </div>
+</div>
+
+<!--Modal Stop-->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="$('#myModal').modal('hide')">x</button>
+      <h4 id="myModalLabel">Editar tipo sistema</h4>
+   </div>
+   <div class="modal-body">
+		 <form id="form_update_preinfo" method="POST" action="">
+         <div id="loaded" align="center"></div>
+         </form>
+   </div>
+   <div class="modal-footer">
+       <button class="btn btn-primary" id="btn_form_update_preinfo">Guardar</button>
+        <a href="#" class="btn" id="btnCancel" onclick="$('#myModal').modal('hide')" >Cancelar</a>
+   </div>
+</div>
+{% endblock %}

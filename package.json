@@ -1,0 +1,11 @@
+{
+  "name": "Eventas",
+  "main": "app://eventas/application.html",
+  "window": {
+  	"width": 715,
+  	"height": 405,  	
+    "toolbar": false,
+    "fullscreen": false,
+    "frame": false
+  }
+}
