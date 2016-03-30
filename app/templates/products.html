@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+{% block body %}
+<script type="text/javascript" src="../static/js/products.js"></script>
+<script type="text/javascript">
+function showInv(){
+    stock = $('#stock').val();
+    if ($('#has_stock').is(":checked"))
+    {
+        $('#td_quantity').show();
+        $('#td_min_stock').show();
+    }
+    else
+    {
+        $('#td_quantity').hide();
+        $('#td_min_stock').hide();
+    }
+}
+
+   $(document).bind('keydown', "f7", function nuevo() {
+        $('#tabsProd a[href="#new"]').tab('show') // Select tab by name
+        $('#code').focus();
+   });
+   $(document).bind('keydown', "f8", function nuevo() {
+        $('#tabsProd a[href="#list"]').tab('show') // Select tab by name
+        $('#search_input').focus();
+   });
+   $(document).bind('keydown', "f9", function nuevo() {
+        $('#tabsProd a[href="#promo"]').tab('show') // Select tab by name
+   });
+</script>
+<div ng-controller="ProductController">
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">GESTIÓN DE PRODUCTOS</h3>
+  </div>
+  <div class="panel-body">
+    <!--TAB SECTION-->
+    <ul class="nav nav-tabs" id="tabsProd">
+      <li class="active">
+        <a ng-href="#new" data-toggle="tab">Nuevo Producto (F7)</a>
+      </li>
+      <li >
+        <a ng-href="#list" data-toggle="tab">Ver Productos (F8)</a>
+      </li>
+      <li >
+        <a ng-href="#promo" data-toggle="tab">Promociones (F9)</a>
+      </li>
+    </ul>
+    <!--PRODUCTO NUEVO-->
+    <div class="tab-content">
+        <div class="tab-pane active" id="new">
+            <br>
+            <div class="alert alert-success" style="display:none;" role="alert">PRODUCTO CREADO CON EXITO</div>
+            <div class="well well-sm" style="">
+                <form class="form-horizontal">
+                    <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                        <tr>
+                            <td>Código de Barra: </td>
+                            <td>
+                              <input ng-model="code" type="text" required id="code" >
+                               &nbsp;
+                               <span class="label label-danger" ng-show="code_exists">Ya existe ese código registrado!</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Descripción:</td>
+                            <td>
+                                <div>
+                                  <input type="text" 
+                                        required
+                                        ng-model="description" 
+                                        class="input-xxlarge" 
+                                        required="required"
+                                        style="width:100%"
+                                        placeholder="Nombre o descripcion">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Precio Costo:</td>
+                            <td><input class="span2" ng-model="purchase_price" type="number" step="0.01"></td>
+                        </tr>
+                        <tr>
+                            <td>Precio Venta:</td>
+                            <td> <input class="span2" ng-model="sell_price" type="number" step="0.01"></td>
+                        </tr>
+                        <tr>
+                            <td>Precio Mayoreo:</td>
+                            <td> <input class="span2" ng-model="maj_price" type="number" step="0.01" ></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lleva IVA? </td>
+                            <td><input ng-model="iva" 
+                                       id="iva"
+                                       style="margin-left:5px"
+                                       type="checkbox" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lleva inventario?:</td>
+                            <td><input ng-model="has_stock" 
+                                       id="has_stock"
+                                       onclick="showInv()"
+                                       style="margin-left:5px"
+                                       type="checkbox" >
+                            </td>
+                        </tr>
+                        <tr id="td_quantity" style="display:none">
+                            <td>Cantidad Actual:</td>
+                            <td>
+                              <input class="span2" ng-model="quantity" type="number" >
+                            </td>
+                        </tr>
+                        <tr id="td_min_stock" style="display:none">
+                            <td>Cantidad Mínima:</td>
+                            <td>
+                              <input class="span2" ng-model="min_stock" type="number" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button class="btn btn-primary" ng-click="addProduct()" type="submit">Guardar</button>
+                            </td>
+                            <td><button class="btn btn-default" type="clean">Limpiar</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    <!--LISTA NUEVO-->
+        <div class="tab-pane" id="list">
+            <!--Search-->
+            <br>
+            <div class="well well-sm">
+                <input type="search" 
+                       id="search_input"
+                        class="form-control" 
+                        ng-model="search_filter"
+                        placeholder="Teclee para filtrar el producto">
+            </div>
+            <!--Results-->
+            <div style="overflow: auto; height:300px">
+             <table class="table table-bordered table-striped table-condensed table-hover">
+                    <thead>
+                        <tr style="background-color:#FFF6A7">
+                            <th>
+                              <a href="#" ng-click="orderByField='code'; reverseSort = !reverseSort">
+                                  Código
+                                  <span ng-show="orderByField == 'code'">
+                                      <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                      <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                  </span>
+                              </a>
+                            </th>
+                            <th>
+                              <a href="#" ng-click="orderByField='description'; reverseSort = !reverseSort">
+                                  Descripción
+                                  <span ng-show="orderByField == 'description'">
+                                      <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                      <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                  </span>
+                              </a>
+                            </th>
+                            <th>P. Venta</th>
+                            <th>P. Costo</th>
+                            <th>
+                              <a href="#" ng-click="orderByField='quantity'; reverseSort = !reverseSort">
+                                  Cantidad
+                                  <span ng-show="orderByField == 'quantity'">
+                                      <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                      <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                  </span>
+                              </a>
+                            </th>
+                            <th>Modificar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr ng-repeat="p in products| orderBy:orderByField:reverseSort | filter: search_filter">
+                            <td>{[p.code]}</td>
+                            <td>{[p.description]}</td>
+                            <td>{[p.sell_price]}</td>
+                            <td>{[p.purchase_price]}</td>
+                            <td>{[p.quantity]}</td>
+                            <td>
+                                <a ng-click="editProduct(p)" href="#">
+                                    <span class="glyphicon glyphicon-edit icon-white"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <a ng-click="deleteProduct(p)">
+                                        <span class="glyphicon glyphicon-trash icon-white"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+    <!-- PROMOCIONES -->
+        <div class="tab-pane" id="promo">
+            <br>
+            <div class="well">
+                <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                    <tr>
+                        <td>Nombre Promoci&oacute;n: </td>
+                        <td>
+                          <input ng-model="name" type="text" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Código de Barra: </td>
+                        <td>
+                          <input ng-model="code" type="text" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Cantidad desde: </td>
+                        <td>
+                          <input ng-model="from" type="number" class="col-xs-4" > 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Hasta: </td>
+                        <td>
+                          <input ng-model="from" type="number" class="col-xs-4" > 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Precio unitario: </td>
+                        <td>
+                            <input ng-model="from" type="number" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="4">
+                            <button class="btn btn-primary" ng-click="addProduct()" type="submit">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Guardar Promoci&oacute;n
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div> <!--Tab-content-->
+
+  </div>
+</div>
+
+
+<!--Modal-->
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">EDITAR PRODUCTO {[prod.code]}</h4>
+      </div>
+      <div class="modal-body">
+                <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                    <tr>
+                        <td>Código: </td>
+                        <td>
+                          <input class="span2" type="text" id="edit_code" value={[prod.code]} >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Descripción:</td>
+                        <td>
+                          <input type="text" 
+                                class="input-xlarge" 
+                                required="required"
+                                value={[prod.description]}
+                                placeholder="Entre el nombre/descripción de producto">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Precio Costo:</td>
+                        <td>
+                          <input class="span2" value={[prod.purchase_price]} type="number" step="0.01" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Precio Venta:</td>
+                        <td>
+                            <input class="span2" value={[prod.sell_price]} type="number" step="0.01" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Precio Mayoreo:</td>
+                        <td>
+                              <input class="span2" value={[prod.maj_price]} type="number" step="0.01" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Lleva IVA? </td>
+                        <td><input ng-model="iva" 
+                                   id="iva"
+                                   style="margin-left:5px"
+                                   type="checkbox" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Lleva inventario?:</td>
+                        <td><input ng-model="prod.has_stock" 
+                                    style="margin-left:5px"
+                                    id="has_stock"
+                                    onclick="showInv()"
+                                    type="checkbox" >
+                        </td>
+                    </tr>
+                    <tr ng-show="prod.has_stock" id="td_quantity">
+                        <td>Cantidad Actual:</td>
+                        <td>
+                            <input class="span2" value={[prod.quantity]} type="number" >
+                        </td>
+                    </tr>
+                    <tr ng-show="prod.has_stock" id="td_min_stock">
+                        <td>Cantidad Mínima:</td>
+                        <td>
+                            <input class="span2" value={[prod.min_stock]} type="number" >
+                        </td>
+                    </tr>
+                </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick>Guardar</button>
+      </div>
+    </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--Modal Stop-->
+{% endblock %}

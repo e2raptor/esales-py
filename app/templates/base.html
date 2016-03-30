@@ -4,92 +4,100 @@
     <meta charset="utf-8">
     <title>E-VENTAS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/boostrap/css/bootstrap.css" rel="stylesheet">
-    <link href="static/boostrap/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="static/boostrap/css/docs.css" rel="stylesheet">
-    <link href="static/boostrap/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="static/boostrap3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/boostrap3/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="static/js/jquery-confirm.min.css" rel="stylesheet">
+    <!--<link href="static/boostrap/css/bootstrap-responsive.css" rel="stylesheet">-->
+    <!--<link href="static/boostrap/css/docs.css" rel="stylesheet">-->
+    <!--<link href="static/boostrap/js/google-code-prettify/prettify.css" rel="stylesheet">-->
 
     <script type="text/javascript" src="static/js/jquery.js"></script>
-    <script type="text/javascript" src="static/boostrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="static/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="static/js/jquery-confirm.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery-hotkeys.js"></script>
+    <link href="static/js/jquery-ui.css" rel="stylesheet" type="text/css">
+    <!--<script type="text/javascript" src="static/js/jquery-hotkeymap.js"></script>-->
+    <script type="text/javascript" src="static/boostrap3/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/js/angular.min.js"></script>
+    <script src="static/js/bootbox.min.js"></script>
     <style>
     .contain {margin-left:2%;
               margin-right:2%}
+    .hidden {display:none;}
     #header{padding-left:2%;background-color:#DDD}
     </style>
-    <link href="../boostrap-responsive.css" rel="stylesheet">
+    <!--<link href="../boostrap-responsive.css" rel="stylesheet">-->
   </head>
   <script type="text/javascript" charset="utf-8">
-    {{server}}
-    document.onkeydown = function getcode(ev) {
-        value = (window.external) ? event.keyCode : ev.keyCode;
-        var code = {
-            '112': 'ventas', //F1
-            '113': 'clientes', //F2
-            '114': 'productos', //F3
-            '115': 'inventario', //F4
-        }
-        if (code[value]!= undefined){
-            var server = "{{server}}";
-            window.location = server.concat(code[value]);
-        }
-    }
+   var server = "{{data['server']}}";
+   //Use the hotkeys binding no matter where
+   jQuery.hotkeys.options.filterInputAcceptingElements = false;  
+   jQuery.hotkeys.options.filterContentEditable = false;
+   jQuery.hotkeys.options.filterTextInputs = false;
 
-        //Begining of the AngularJS Module
-        var eventas = angular.module('E-VENTAS', []);
-
-        //This configuration allows AngularJS and Jinja2 work together
-        eventas.config(['$interpolateProvider', function($interpolateProvider) {
-          $interpolateProvider.startSymbol('{[');
-          $interpolateProvider.endSymbol(']}');
-        }]);
+   $(document).bind('keydown', "f1", function assets() {
+        window.location = server.concat("ventas");
+   });
+   $(document).bind('keydown', "f2", function assets() {
+        window.location = server.concat("clientes");
+   });
+   $(document).bind('keydown', "f3", function assets() {
+        window.location = server.concat("productos");
+   });
+   $(document).bind('keydown', "f4", function assets() {
+        window.location = server.concat("inventario");
+   });
+    //Begining of the AngularJS Module
+    var eventas = angular.module('E-VENTAS', []);
+    //This configuration allows AngularJS and Jinja2 work together
+    eventas.config(['$interpolateProvider', function($interpolateProvider) {
+      $interpolateProvider.startSymbol('{[');
+      $interpolateProvider.endSymbol(']}');
+    }]);
   </script>
 
   <body ng-app="E-VENTAS" style="padding-top:0px">
-    <!-- Header 
-    ================================================== -->      
-    <div class="jumbotron" style="height:25px;padding-top:5px">
-        <div id="" align="left" style="padding-left:25px">
-            <h2 id="heading">PUNTO DE VENTA</h2>
+
+      <div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:10%">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><b>ECUVENTAS</b></a>
         </div>
-    </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <p class="navbar-text navbar-right">
+              <span style="color:#FFF"> Hola Usuario Logueado</span>
+          </p>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
 
     <!-- Menu BAR
-    ================================================== -->      
-    <div id="name" style="margin-bottom:10px;padding:5px;background-color:#DDD;">
-            <a class="btn" href="ventas"><i class="icon-shopping-cart"></i> F1 Ventas</a>
-            <a class="btn" href="clientes"><i class="icon-user"></i> F2 Clientes</a>
-            <a class="btn" href="productos"><i class="icon-th"></i> F3 Productos</a>
-            <a class="btn" href="#"><i class="icon-th-list"></i> F4 Inventario</a>
+    ================================================== -->
+    <div id="name" style="margin-top:50px;padding:5px;background-color:#FCF8E3;">
+            <a class="btn btn-default {{data['sale']}}" href="ventas"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> F1 Ventas</a>
+            <a class="btn btn-default {{data['client']}}" href="clientes" role="button">
+                <span class="glyphicon glyphicon-user"></span> F2 Clientes</a>
+            <a class="btn btn-default {{data['product']}}" href="productos">
+                <span class="glyphicon glyphicon-th"></span> F3 Productos</a>
+            <a class="btn btn-default {{data['stock']}}" href="inventario">
+                <span class="glyphicon glyphicon-th-list"></span> F4 Inventario</a>
     </div>
 
-    <div class="contain">
+    <div style="margin-left:2px;margin-right:2px">
         {% block body %}{% endblock %}
     </div> <!-- /container -->
-
-    <script type="text/javascript" charset="utf-8">
-
-
-        
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();   
+        });
     </script>
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster
-    -->
-    <script src="../static/boostrap/css/js/bootstrap-transition.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-alert.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-modal.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-dropdown.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-scrollspy.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-tab.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-tooltip.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-popover.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-button.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-collapse.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-carousel.js"></script>
-    <script src="../static/boostrap/css/js/bootstrap-typeahead.js"></script>
-
 
   </body>
 </html>

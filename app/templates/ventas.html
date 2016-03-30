@@ -1,6 +1,603 @@
 {% extends "base.html" %}
 {% block body %}
-<div id="name">
-    <h1 id="VENTAS">VENTAS</h1>
-</div>
+<style>
+ table.table-fixedheader {
+    width: 100%;   
+}
+ table.table-fixedheader, table.table-fixedheader>thead, table.table-fixedheader>tbody, table.table-fixedheader>thead>tr, table.table-fixedheader>tbody>tr, table.table-fixedheader>thead>tr>th, table.table-fixedheader>tbody>td {
+    display: block;
+}
+table.table-fixedheader>thead>tr:after, table.table-fixedheader>tbody>tr:after {
+    content:' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+ table.table-fixedheader>tbody {
+    overflow-y: scroll;
+    height: 100px;
+    
+}
+ table.table-fixedheader>thead {
+    overflow-y: scroll;    
+}
+ table.table-fixedheader>thead::-webkit-scrollbar {
+    background-color: inherit;
+}
+table.table-fixedheader>thead>tr>th:after, table.table-fixedheader>tbody>tr>td:after {
+    content:' ';
+    display: table-cell;
+    visibility: hidden;
+    clear: both;
+}
+ table.table-fixedheader>thead tr th, table.table-fixedheader>tbody tr td {
+    float: left;    
+    word-wrap:break-word;     
+}
+</style>
+<script type="text/javascript" src="../static/js/sales.js"></script>
+<script type="text/javascript">
+
+function charge(){
+     console.log('Entering confirm_test');
+    // Load native UI library
+    //var gui = window.nwDispatcher.requireNwGui();
+    //var gui = window.require('nw.gui');
+    gui.Window.get().showDevTools();
+    //var gui = require("nw.gui");
+     console.log('Surpasing require nw.gui');
+    // Get the current window
+    var win = gui.Window.get();
+    // Listen to the minimize event
+    win.on('minimize', function() {
+      console.log('Window is minimized');
+    });
+    // Minimize the window
+    win.minimize();
+    // Unlisten the minimize event
+    win.removeAllListeners('minimize');
+    // Create a new window and get it
+    var new_win = gui.Window.open('https://github.com');
+    // And listen to new window's focus event
+    new_win.on('focus', function() {
+      console.log('New window is focused');
+    });
+}
+    $(document).ready(function(){
+            $('#product_sale').focus();
+    });
+   $(document).bind('keydown', "insert", function insert() {
+        var button = angular.element('a#modifyLine[ng-click="modifyLine()"]');
+        button.click();
+   });
+   $(document).bind('keydown', "f10", function nt() {
+        var button = angular.element('a#newTicket[ng-click="newTicket()"]');
+        button.click();
+   });
+   $(document).bind('keydown', "del", function search() {
+        var button = angular.element('a#deleteTicket[ng-click="deleteTicket()"]');
+        button.click();
+   });
+    function show(ticket){
+        if(!$('#div_'+ticket).hasClass('hidden')){
+            $('#tabSales a[href="#div_'+ticket+'"]').tab('show') // Select tab by name
+            $('#product_sale').focus();
+        };
+        return false;
+    }
+
+   $(document).bind('keydown', "Ctrl+1", function assets() {
+       return show('t1');
+   });
+   $(document).bind('keydown', "Ctrl+2", function nuevo() {
+       return show('t2');
+   });
+   $(document).bind('keydown', "Ctrl+3", function nuevo() {
+       return show('t3');
+   });
+   $(document).bind('keydown', "Ctrl+4", function nuevo() {
+       return show('t4');
+   });
+   $(document).bind('keydown', "Ctrl+5", function nuevo() {
+       return show('t5');
+   });
+   $(document).bind('keydown', "Ctrl+6", function nuevo() {
+       return show('t6');
+   });
+   $(document).bind('keydown', "Ctrl+7", function nuevo() {
+       return show('t7');
+   });
+   $(document).bind('keydown', "Ctrl+8", function nuevo() {
+       return show('t8');
+   });
+   $(document).bind('keydown', "Ctrl+9", function nuevo() {
+       return show('t9');
+   });
+   $(document).bind('keydown', "Ctrl+10", function nuevo() {
+       return show('t10');
+   });
+</script>
+<div ng-controller="SalesController" >
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">GESTIÓN DE VENTAS</h3>
+  </div>
+  <div class="panel-body" style="padding-top:3px; padding 3px;">
+            <div class="well well-sm" style="margin-bottom:0px;" >
+                    <form class="form-inline">
+                      <div class="form-group col-xs-6">
+                        <label for="product_sale">C&oacute;digo / Nombre</label>
+                        <input type="text" 
+                                class="form-control autocomplete" 
+                                placeholder="Teclee el código o nombre del producto a vender" 
+                                auto-complete 
+                                style="width:80%"
+                                id="product_sale"
+                                ng-model="product">
+                      </div>
+                      <div class="form-group col-xs-3">
+                        <label for="prod_quantity">Cantidad</label>
+                        <input type="number" class="form-control" id="prod_quantity" ng-model="product_quantity" value="1">
+                      </div>
+                        <button class="btn btn-primary" ng-click="addSaleLine()" type="submit">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Agregar Producto
+                        </button>
+                    </form>
+            </div> <!--search-product-->
+
+            <!--SALES BUTTON-->
+            <div id="name" style="padding:5px;background-color:#FCF8E3;" align="right">
+                    <a class="btn btn-default btn-sm" href="#" data-toggle="tooltip" id="modifyLine"
+                        ng-click="modifyLine()"
+                        title="Modifica una línea seleccionada">
+                        <span class="glyphicon glyphicon-edit"></span> INS Modificar Cantidad</a>
+                    <a class="btn btn-success btn-sm" href="#" data-toggle="tooltip" title="Registra una entrada de efectivo de la caja">
+                        <span class="glyphicon glyphicon-usd"></span> F8 Entradas</a>
+                    <a class="btn btn-success btn-sm" href="#" data-toggle="tooltip" title="Registra una salida de efectivo de la caja">
+                        <span class="glyphicon glyphicon-usd"></span> F9 Salidas</a>
+            </div>
+
+            <!--SALES-DATATABLE-->
+            <ul class="nav nav-tabs" id="tabSales" ng-click="updateAmount()" >
+              <li class="active">
+                <a ng-href="#div_t1" data-toggle="tab" id="t1">Ticket 1</a>
+              </li>
+              <li>
+                <a ng-href="#div_t2" class="hidden" data-toggle="tab" id="t2">Ticket 2</a>
+              </li>
+              <li>
+                <a ng-href="#div_t3" class="hidden" data-toggle="tab" id="t3">Ticket 3</a>
+              </li>         
+              <li>         
+                <a ng-href="#div_t4" class="hidden" data-toggle="tab" id="t4">Ticket 4</a>
+              </li>       
+              <li>       
+                <a ng-href="#div_t5" class="hidden" data-toggle="tab" id="t5">Ticket 5</a>
+              </li>     
+              <li>     
+                <a ng-href="#div_t6" class="hidden" data-toggle="tab" id="t6">Ticket 6</a>
+              </li>   
+              <li>   
+                <a ng-href="#div_t7" class="hidden" data-toggle="tab" id="t7">Ticket 7</a>
+              </li> 
+              <li> 
+                <a ng-href="#div_t8" class="hidden" data-toggle="tab" id="t8">Ticket 8</a>
+              </li> 
+              <li> 
+                <a ng-href="#div_t9" class="hidden" data-toggle="tab" id="t9">Ticket 9</a>
+              </li>
+              <li>
+                <a ng-href="#div_t10" class="hidden" data-toggle="tab" id="t10">Ticket 10</a>
+              </li>
+            </ul>
+            <!--CLIENTE NUEVO-->
+            <div class="tab-content">
+                <div class="tab-pane active" id="div_t1">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t1" >
+                            <tr ng-repeat="l in tickets.t1" id="tr_t1_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t1', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t1-->
+                <div class="tab-pane hidden" id="div_t2">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio T2</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t2" >
+                            <tr ng-repeat="l in tickets.t2" id="tr_t2_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t2', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t2-->
+                <div class="tab-pane hidden" id="div_t3">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t3" >
+                            <tr ng-repeat="l in tickets.t3" id="tr_t3_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t3', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t3-->
+                <div class="tab-pane hidden" id="div_t4">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t4" >
+                            <tr ng-repeat="l in tickets.t4" id="tr_t4_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t4', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t4-->
+                <div class="tab-pane hidden" id="div_t5">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t5" >
+                            <tr ng-repeat="l in tickets.t5" id="tr_t5_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t5', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t5-->
+                <div class="tab-pane hidden" id="div_t6">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t6" >
+                            <tr ng-repeat="l in tickets.t6" id="tr_t6_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t6', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t6-->
+                <div class="tab-pane hidden" id="div_t7">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t7" >
+                            <tr ng-repeat="l in tickets.t7" id="tr_t7_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t7', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t7-->
+                <div class="tab-pane hidden" id="div_t8">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t8" >
+                            <tr ng-repeat="l in tickets.t8" id="tr_t8_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t8', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t8-->
+                <div class="tab-pane hidden" id="div_t9">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t9" >
+                            <tr ng-repeat="l in tickets.t9" id="tr_t9_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t9', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t9-->
+                <div class="tab-pane hidden" id="div_t10">
+                    <br>
+                    <table class="table table-condensed table-hover table-fixedheader" >
+                        <thead style="height:25px;">
+                            <tr style="background-color:#EBEADB">
+                                <th width="13%">C&oacute;digo</th>
+                                <th width="33%">Descripci&oacute;n</th>
+                                <th width="9%">Precio</th>
+                                <th width="9%">Cant.</th>
+                                <th width="9%">Importe</th>
+                                <th width="9%">Existencia</th>
+                                <th width="9%">P. Mayor</th>
+                                <th width="9%">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:200px" id="tbody_t10" >
+                            <tr ng-repeat="l in tickets.t10" id="tr_t10_{[l.id]}" ng-click="selectLine(l)" >
+                                <td width="13%" class="info">{[l.code]}</td>
+                                <td width="33%">{[l.description]}</td>
+                                <td width="9%">$ {[l.unit_price | number:2]}</td>
+                                <td width="9%">{[l.quantity]}</td>
+                                <td width="9%" class="info">${[l.amount | number:2]}</td>
+                                <td width="9%">{[l.stock]}</td>
+                                <td width="9%">
+                                    <a ng-click="setMajorPrice(l)" href="#">
+                                        <span class="glyphicon glyphicon-copy"></span>
+                                    </a>
+                                </td>
+                                <td width="9%">
+                                    <a ng-click="deleteSaleLine('t10', l.id)" href="#">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--end-Tab-t10-->
+            </div> <!--Tab-content-->
+            <div style="border-style:solid; border-color:#DDD; margin-bottom:5px;">
+            </div>
+            <!--SALES BUTTON-->
+
+            <div class="row well well-sm" style="margin:0px 2px 2px 0px">
+                <div class="col-xs-6 col-md-4" >
+                    <a class="btn btn-default btn-sm" href="#" data-toggle="tooltip" ng-click="newTicket()"
+                        id="newTicket"
+                        title="Crea un nuevo ticket para una nueva venta y pone el actual como pendiente">
+                        <span class="glyphicon glyphicon-star"></span> F10 Nuevo Ticket</a>
+                    <a class="btn btn-default btn-sm" href="#" id="deleteTicket"
+                        data-toggle="tooltip" ng-click="deleteTicket()" title="Elimina el ticket actual">
+                        <span class="glyphicon glyphicon-trash"></span> DEL Eliminar Ticket</a>
+              </div>
+              <div class="col-xs-8 col-md-6" align="right" >
+                    <a class="btn btn-primary btn-lg" href="#" data-toggle="tooltip"
+                                                               onclick="charge()"
+                        title="Cobra la venta indicando forma de pago">
+                        <span class="glyphicon glyphicon-usd"></span> F12 COBRAR</a>
+              </div>
+              <div class="col-xs-4 col-md-2" align="right">
+                  <span class="" style="font-size:280%; font-weight:bold;">$ {[total_amount | number:2]}</span>
+              </div>
+            </div>
+  </div><!--panel-body-->
+</div><!--panel-->
+</div> <!--end-controller-->
 {% endblock %}

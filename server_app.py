@@ -5,4 +5,4 @@ if not args:
     #Allows to be accessed from any ip
     app.run(host='0.0.0.0')
 else:
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)

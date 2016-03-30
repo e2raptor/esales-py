@@ -1,28 +1,12 @@
 eventas.controller('MainController', function($scope, $http) {
     $scope.users = []
 
-    //Aqui estoy llamando al route /users en views.py via Ajax GET
+    //Aqui estoy llamando al route /users en products.py via Ajax GET
     //La funcion en el py me devuelve: {'users':[dic1, dic2]}
       $http.get('/users').
         success(function(data, status, headers, config) {
           $scope.users = data['users'];
         });
-    $scope.onKeyDownResult = "";
-    $scope.onKeyUpResult = "";
-    $scope.onKeyPressResult = "";
-
-    // Utility functions
-
-    var getKeyboardEventResult = function (keyEvent, keyEventDesc)
-    {
-      return keyEventDesc + " (keyCode: " + (window.event ? keyEvent.keyCode : keyEvent.which) + ")";
-    };
-
-    // Event handlers
-    $scope.onKeyDown = function ($event) {
-      $scope.onKeyDownResult = getKeyboardEventResult($event, "Key down");
-    };
-
     //Por metodo POST llamo a add_user y le paso un diccionario tipo vals de open
     //para crear el nuevo objeto, lo agrego instantaneo en la tabla y limpio campos
       $scope.add_user = function(){

@@ -1,6 +1,240 @@
 {% extends "base.html" %}
 {% block body %}
-<div id="name">
-    <h1 id="C">CLIENTES</h1>
-</div>
+<script type="text/javascript" src="../static/js/client.js"></script>
+<style type="text/css">
+.heading-client{
+    background-image: linear-gradient(to bottom, #65C042 0%, #44A31F 100%);
+    background-color:green;
+    border-color:green;
+    color:#fff
+}
+</style>
+<script type="text/javascript">
+   $(document).bind('keydown', "f7", function nuevo() {
+        $('#tabsCl a[href="#new"]').tab('show') // Select tab by name
+        $('#input_name').focus();
+   });
+   $(document).bind('keydown', "f8", function search() {
+        $('#tabsCl a[href="#list"]').tab('show') // Select tab by name
+        $('#search_input').focus();
+   });
+</script>
+<div ng-controller="ClientController">
+
+<div class="panel" style="border-color:#65C042 ">
+  <div class="heading-client panel-heading" >
+    <h3 class="panel-title">GESTIÓN DE CLIENTES</h3>
+  </div>
+  <div class="panel-body">
+    <!--TAB SECTION-->
+    <ul class="nav nav-tabs" id="tabsCl">
+      <li class="active">
+        <a ng-href="#new" data-toggle="tab">Nuevo Cliente (F7)</a>
+      </li>
+      <li >
+        <a ng-href="#list" data-toggle="tab">Ver Clientes (F8)</a>
+      </li>
+    </ul>
+    <!--CLIENTE NUEVO-->
+    <div class="tab-content">
+        <div class="tab-pane active" id="new">
+            <br>
+            <div id="alert-add" class="alert alert-success" style="display:none;" role="alert">CLIENTE REGISTRADO CON &Eacute;XITO</div>
+            <div id="alert-upd" class="alert alert-success" style="display:none;" role="alert">CLIENTE MODIFICADO CON &Eacute;XITO</div>
+            <div class="well well-sm" style="">
+                <form class="form-horizontal">
+                    <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                        <tr>
+                            <td>Nombre:</td>
+                            <td>
+                                <div>
+                                  <input type="text" 
+                                        required
+                                        ng-model="name" 
+                                        id="input_name"
+                                        required="required"
+                                        class="col-xs-14"
+                                        style="width:210px"
+                                        placeholder="Nombre completo">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tipo Id: </td>
+                            <td>
+                                <select ng-model="vat_type" required>
+                                  <option value="ruc" selected>C&Eacute;DULA</option>
+                                  <option value="ced">RUC</option>
+                                  <option value="pas">PASAPORTE</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Identificaci&oacute;n:</td>
+                            <td>
+                              <input ng-model="vat" type="text" required >
+                               &nbsp;
+                               <span class="label label-danger" ng-show="code_exists">Ya existe esa id registrada!</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>L&iacute;mite cr&eacute;dito: </td>
+                            <td>
+                                <input ng-model="credit_limit" type="number" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button class="btn btn-primary" ng-click="addClient()" type="submit">Guardar</button>
+                            </td>
+                            <td><button class="btn btn-default" type="clean">Limpiar</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div><!--Tan-nuevo-->
+    <!--LISTA -->
+        <div class="tab-pane" id="list">
+            <br>
+            <!--Search-->
+            <div class="well well-sm">
+                <input type="search" 
+                        class="form-control" 
+                        id="search_input"
+                        ng-model="search_filter"
+                        placeholder="Teclee (Nombre, Cedula o RUC) para buscar el cliente">
+            </div> <!--Search-->
+            <div style="overflow: auto; height:300px">
+                 <table class="table table-bordered table-striped table-condensed table-hover">
+                        <thead>
+                            <tr style="background-color:#FFF6A7">
+                                <th>
+                                  <a href="#" ng-click="orderByField='name'; reverseSort = !reverseSort">
+                                      Nombre Completo
+                                      <span ng-show="orderByField == 'name'">
+                                          <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                          <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                      </span>
+                                  </a>
+                                </th>
+                                <th>
+                                  <a href="#" ng-click="orderByField='vat'; reverseSort = !reverseSort">
+                                      Indentificaci&oacute;n
+                                      <span ng-show="orderByField == 'vat'">
+                                          <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                          <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                      </span>
+                                  </a>
+                                </th>
+                                <th>
+                                  <a href="#" ng-click="orderByField='vat_type'; reverseSort = !reverseSort">
+                                      Tipo ID
+                                      <span ng-show="orderByField == 'vat_type'">
+                                          <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                          <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                      </span>
+                                  </a>
+                                </th>
+                                <th>Lim. Cr&eacute;dito</th>
+                                <th>Ver Est. Cuentas</th>
+                                <th>Modificar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr ng-repeat="c in clients| orderBy:orderByField:reverseSort | filter: search_filter">
+                                <td>{[c.name]}</td>
+                                <td>{[c.vat]}</td>
+                                <td>{[getVat(c.vat_type)]}</td>
+                                <td>{[c.credit_limit]}</td>
+                                <td>
+                                    <a ng-click="accountState(c)" href="#">
+                                        <span class="glyphicon glyphicon-folder-open icon-white"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a ng-click="editClient(c)">
+                                        <span class="glyphicon glyphicon-edit icon-white"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a ng-click="deleteClient(c)">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div><!--Tab-list-->
+
+    </div> <!--Tab-content-->
+  </div><!--Panel-body-->
+</div><!--Panel-->
+
+
+<!--Modal-->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalClient" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form class="form-horizontal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">EDITAR CLIENTE {[client.vat]}</h4>
+      </div>
+      <div class="modal-body">
+                <input type="hidden" value="{[client.id]}" id="client_id">
+                    <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                        <tr>
+                            <td>Nombre:</td>
+                            <td>
+                                <div>
+                                  <input type="text" 
+                                        required
+                                        id="m_name"
+                                        class="col-xs-14"
+                                        style="width:210px"
+                                        value={[client.name]}
+                                        placeholder="Nombre completo">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tipo Id: </td>
+                            <td>
+                                <select required id="modal_vat_type" >
+                                  <option value="ced">C&Eacute;DULA</option>
+                                  <option value="ruc">RUC</option>
+                                  <option value="pas">PASAPORTE</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Identificación:</td>
+                            <td>
+                              <input type="text" required  value={[client.vat]} id="m_vat">
+                               &nbsp;
+                               <span class="label label-danger" ng-show="code_exists">Ya existe ese id registrada!</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>L&iacute;mite cr&eacute;dito: </td>
+                            <td>
+                                <input ng-model="credit_limit" type="number" value={[client.credit_limit]} id="m_credit_limit" >
+                            </td>
+                        </tr>
+                    </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-ng-click="updateClient()">Guardar</button>
+      </div>
+        </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div><!--ng-controller-->
 {% endblock %}

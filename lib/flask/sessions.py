@@ -329,4 +329,4 @@ class SecureCookieSessionInterface(SessionInterface):
                             domain=domain, path=path, secure=secure)
 
 
-from flask.debughelpers import UnexpectedUnicodeError
+from debughelpers import UnexpectedUnicodeError

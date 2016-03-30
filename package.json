@@ -1,6 +1,7 @@
 {
   "name": "Eventas",
   "main": "app://eventas/application.html",
+  "node-remote": "localhost",
   "window": {
   	"width": 715,
   	"height": 405,  	
