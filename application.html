@@ -8,21 +8,44 @@
     </script>
     <style>
         body {
-        background: #27C65F;
+        //background: #3277B2;
+           background: -webkit-linear-gradient(#3E6485,#3277B2);
+           background: -moz-linear-gradient(orange, pink);
+           background: -o-linear-gradient(orange, pink);
         color: #FFF;
-        font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+        font-family: "Segoe UI", Frutiger, 
+                        "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
         cursor: default;
+        }
+
+        .great{
+            font-size:450%;
+            color:#B7DDFF;
+        }
+        .normal{
+            font-size:250%;
+            font-weight:bold;
+            color:#FFF;
+        }
+        .dtitle{
+            margin-top:20%;
+            text-align:center;
         }
     </style>
   </head>
   <body>
-    <h1>Punto de Venta</h1>
+      <div class="dtitle">
+          <span class="great">ECU</span>
+          <span class="normal">VENTAS</span>
+          <br>
+          <b>Todo lo que necesita para sus ventas ...</b>
+      </div>
+    <div style="display:none">
+        We are using node.js <script>document.write(process.version)</script>.<br/>
+        platform: <script>document.write(platform())</script>.<br/>
+        status: <span id="status">status</span>
+    </div>
     
-    We are using node.js <script>document.write(process.version)</script>.<br/>
-    platform: <script>document.write(platform())</script>.<br/>
-    status: <span id="status">status</span>
-
-     status: <span id="status">status</span> 
 
     <script type="text/javascript" charset="utf-8">
         var pyexec = '/usr/bin/python';
