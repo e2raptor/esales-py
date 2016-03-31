@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% block body %}
+<script type="text/javascript" src="../static/app-js/products.js"></script>
+<script type="text/javascript">
+   $(document).bind('keydown', "ctrl+e", function nuevo() {
+        $('#tabsProd a[href="#cash"]').tab('show') // Select tab by name
+        $('#input_cash').focus();
+   });
+   $(document).bind('keydown', "ctrl+c", function nuevo() {
+        $('#tabsProd a[href="#balance"]').tab('show') // Select tab by name
+        $('#input_balance').focus();
+   });
+   $(document).bind('keydown', "ctrl+t", function nuevo() {
+        $('#tabsProd a[href="#credit"]').tab('show') // Select tab by name
+   });
+   $(document).bind('keydown', "ctrl+m", function nuevo() {
+        $('#tabsProd a[href="#mixed"]').tab('show') // Select tab by name
+   });
+</script>
+<div ng-controller="ProductController">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                  <h3 class="panel-title"><b>COBRAR TICKET 1</b></h3>
+              </div>
+              <div class="panel-body">
+
+                <!--TAB SECTION-->
+                <ul class="nav nav-pills" id="tabsProd">
+                  <li class="active">
+                    <a ng-href="#cash" data-toggle="tab">
+                        <span class="glyphicon glyphicon-usd"></span> <u>E</u>FECTIVO</a>
+                  </li>
+                  <li >
+                    <a ng-href="#balance" data-toggle="tab">
+                        <span class="glyphicon glyphicon-list-alt"></span> <u>C</u>R&Eacute;DITO</a>
+                  </li>
+                  <li >
+                    <a ng-href="#credit" data-toggle="tab">
+                        <span class="glyphicon glyphicon-credit-card"></span> <u>T</u>ARJETA DE CR&Eacute;DITO</a>
+                  </li>
+                  <li >
+                    <a ng-href="#mixed" data-toggle="tab">
+                        <span class="glyphicon glyphicon-retweet"></span> <u>M</u>IXTO</a>
+                  </li>
+                </ul>
+                <!--EFECTIVO-->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="cash">
+                        <br>
+                        <div class="well" align="center">
+                            <form class="form-horizontal">
+                                <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                                    <tr>
+                                        <td style="font-size:160%">Cliente: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    ng-model="cash_client" 
+                                                    id="input_cash_client"
+                                                    placeholder="Consumidor Final"
+                                                    style="height:35px; width:300px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">ID: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    ng-model="cash_id" 
+                                                    id="input_cash_id"
+                                                    placeholder="9999999999"
+                                                    style="height:35px; width:300px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">Pag&oacute; con: </td>
+                                        <td>
+                                            <div>
+                                              <input type="number" 
+                                                    required
+                                                    ng-model="cash" 
+                                                    id="input_cash"
+                                                    required="required"
+                                                    style="height:35px; width:200px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">Cambio: </td>
+                                        <td style="font-size:200%"><b>$ 0.00</b></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                <!--CREDITO DE CLIENTES-->
+                    <div class="tab-pane" id="balance">
+                        <br>
+                        <div class="well" align="center">
+                            <form class="form-horizontal">
+                                <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                                    <tr>
+                                        <td style="font-size:160%">Cliente: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    ng-model="balance" 
+                                                    id="input_balance"
+                                                    required="required"
+                                                    style="height:35px; width:300px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                <!-- TARJETA DE CREDITO -->
+                    <div class="tab-pane" id="credit">
+                        <br>
+                        <div class="well" align="center">
+                            <form class="form-horizontal">
+                                <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                                    <tr>
+                                        <td style="font-size:160%">Cliente: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    ng-model="credit_client" 
+                                                    id="input_credit_client"
+                                                    placeholder="Consumidor Final"
+                                                    style="height:35px; width:300px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">ID: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    ng-model="credit_id" 
+                                                    id="input_credit_id"
+                                                    placeholder="9999999999"
+                                                    style="height:35px; width:300px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">No. Tarjeta: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    required
+                                                    ng-model="card" 
+                                                    id="input_credit"
+                                                    required="required"
+                                                    style="height:35px; width:200px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                <!-- PAGO MIXTO -->
+                    <div class="tab-pane" id="mixed">
+                        <br>
+                        <div class="well" align="center">
+                            <form class="form-horizontal">
+                                <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                                    <tr>
+                                        <td style="font-size:160%">Cliente: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    ng-model="mixed_client" 
+                                                    id="input_mixed_client"
+                                                    placeholder="Consumidor Final"
+                                                    style="height:35px; width:300px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">ID: </td>
+                                        <td>
+                                            <div>
+                                              <input type="text" 
+                                                    ng-model="credit_id" 
+                                                    id="input_credit_id"
+                                                    placeholder="9999999999"
+                                                    style="height:35px; width:300px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">Efectivo: </td>
+                                        <td>
+                                            <div>
+                                              <input type="number" 
+                                                    required
+                                                    ng-model="mixed_cash" 
+                                                    id="mixed_cash"
+                                                    required="required"
+                                                    placeholder="0.00"
+                                                    style="height:35px; width:200px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">Tarjeta: </td>
+                                        <td>
+                                            <div>
+                                              <input type="number" 
+                                                    required
+                                                    ng-model="mixed_credit" 
+                                                    id="mixed_credit"
+                                                    required="required"
+                                                    placeholder="0.00"
+                                                    style="height:35px; width:200px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">Crédito: </td>
+                                        <td>
+                                            <div>
+                                              <input type="number" 
+                                                    required
+                                                    ng-model="mixed_balance" 
+                                                    id="mixed_balance"
+                                                    required="required"
+                                                    placeholder="0.00"
+                                                    style="height:35px; width:200px; font-size:160%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size:160%">Restan: </td>
+                                        <td style="font-size:160%"><b>$ 0.00</b></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </div> <!--Tab-content-->
+              </div><!--panel-body-->
+          </div><!--panel-->
+        </div><!--col-md8-->
+        <!--PANEL DE OPCIONES-->
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                  <h3 class="panel-title"><b>OPCIONES</b></h3>
+              </div>
+              <div class="panel-body" style="background:#ECF0F6;">
+                  <div align="center">
+                      <span class="" style="font-size:380%; font-weight:bold;">$ 0.00</span>
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-default btn-lg btn-block">
+                        <span class="glyphicon glyphicon-print"></span> 
+                        &nbsp;
+                        F8 - Cobrar e Imprimir Ticket
+                    </button>
+                    <br>
+                    <button type="button" class="btn btn-default btn-lg btn-block">
+                        <span class="glyphicon glyphicon-book"></span> 
+                        &nbsp;
+                        F9 - Cobrar registrando venta
+                    </button>
+                    <br>
+                    <button type="button" class="btn btn-default btn-lg btn-block">
+                        <span class="glyphicon glyphicon-arrow-left"></span> 
+                        &nbsp;
+                        F10 - Regresar a las ventas
+                    </button>
+                    <br>
+                  </div>
+              </div><!--panel-body-->
+          </div><!--panel-->
+        </div><!--col-md4-->
+    </div><!--div-row-->
+
+
+</div>
+{% endblock %}

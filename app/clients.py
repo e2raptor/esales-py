@@ -23,7 +23,7 @@ class Client(db.Model):
 @app.route('/clientes')
 def clients():
     data = {'client':'active'}
-    return render_template("clientes.html", data=data)
+    return render_template("clients.html", data=data)
 
 @app.route('/clientes/get')
 def get_clients():

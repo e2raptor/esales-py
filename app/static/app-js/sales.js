@@ -1,26 +1,3 @@
-function charge(){
-     console.log('Entering confirm_test');
-    // Load native UI library
-    //var gui = window.nwDispatcher.requireNwGui();
-    var gui = require("nw.gui");
-     console.log('Surpasing require nw.gui');
-    // Get the current window
-    var win = gui.Window.get();
-    // Listen to the minimize event
-    win.on('minimize', function() {
-      console.log('Window is minimized');
-    });
-    // Minimize the window
-    win.minimize();
-    // Unlisten the minimize event
-    win.removeAllListeners('minimize');
-    // Create a new window and get it
-    var new_win = gui.Window.open('https://github.com');
-    // And listen to new window's focus event
-    new_win.on('focus', function() {
-      console.log('New window is focused');
-    });
-}
 
 function update_total_amount(lines){
     var amount = 0;

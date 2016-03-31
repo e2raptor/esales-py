@@ -3,6 +3,7 @@ var basedir = '.'; //working dir
 var pywsgi = basedir+'/server_app.py';
         
 var startpage = 'http://127.0.0.1:5000/';
+//var startpage = 'http://192.168.1.5:5000/';
 var pagecheck = 'http://127.0.0.1:5000/404'; //no side-effect page to check if webserver is running
 //************************************************************        
 var wsgi_process = null;
@@ -67,10 +68,8 @@ function StartWSGI(pyexec)
 function InitMainWindow()
 {
     var gui = require('nw.gui');
-
     // Get the current window
     var win = gui.Window.get();
-
     var new_win = 
         gui.Window.open(startpage, {
             position: 'center',
@@ -110,21 +109,6 @@ function InitMainWindow()
              {
                 new_win.reload();
              }
-             if (e.keyIdentifier == "F11")
-             {
-                new_win.toggleFullscreen();
-             }
-             if (e.keyIdentifier == "F12")
-             {
-
-                if (new_win.isDevToolsOpen())
-                {
-                    new_win.closeDevTools();
-                }else{
-                    new_win.showDevTools();
-                }
-
-             }         
             };	
         });
 

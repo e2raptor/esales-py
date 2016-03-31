@@ -19,4 +19,4 @@ def after_request(response):
   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
   return response
 
-from app import products,sales,clients,stock
+from app import products,sale_lines,clients,stock,charge

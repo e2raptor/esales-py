@@ -39,12 +39,12 @@ def get_lines():
 @app.route('/index')
 def index():
     data = {'server': 'http://localhost:5000/', 'sale':'active'}
-    return render_template("ventas.html",data=data)
+    return render_template("sales.html",data=data)
 
 @app.route('/ventas')
 def ventas():
     data = {'server': 'http://localhost:5000/', 'sale':'active'}
-    return render_template("ventas.html",data=data)
+    return render_template("sales.html",data=data)
 
 @app.route('/ventas/form/modificar/linea')
 def modify_line():

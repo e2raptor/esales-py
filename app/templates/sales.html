@@ -35,15 +35,15 @@ table.table-fixedheader>thead>tr>th:after, table.table-fixedheader>tbody>tr>td:a
     word-wrap:break-word;     
 }
 </style>
-<script type="text/javascript" src="../static/js/sales.js"></script>
+<script type="text/javascript" src="../static/app-js/sales.js"></script>
 <script type="text/javascript">
 
 function charge(){
      console.log('Entering confirm_test');
     // Load native UI library
     //var gui = window.nwDispatcher.requireNwGui();
+    var gui = global.window.nwDispatcher.requireNwGui();
     //var gui = window.require('nw.gui');
-    gui.Window.get().showDevTools();
     //var gui = require("nw.gui");
      console.log('Surpasing require nw.gui');
     // Get the current window
@@ -77,6 +77,9 @@ function charge(){
    $(document).bind('keydown', "del", function search() {
         var button = angular.element('a#deleteTicket[ng-click="deleteTicket()"]');
         button.click();
+   });
+   $(document).bind('keydown', "f11", function nt() {
+        window.location = server.concat("cobrar");
    });
     function show(ticket){
         if(!$('#div_'+ticket).hasClass('hidden')){
@@ -588,10 +591,9 @@ function charge(){
                         <span class="glyphicon glyphicon-trash"></span> DEL Eliminar Ticket</a>
               </div>
               <div class="col-xs-8 col-md-6" align="right" >
-                    <a class="btn btn-primary btn-lg" href="#" data-toggle="tooltip"
-                                                               onclick="charge()"
+                    <a class="btn btn-primary btn-lg" href="cobrar" data-toggle="tooltip" id="cobrar"
                         title="Cobra la venta indicando forma de pago">
-                        <span class="glyphicon glyphicon-usd"></span> F12 COBRAR</a>
+                        <span class="glyphicon glyphicon-usd"></span> F11 COBRAR</a>
               </div>
               <div class="col-xs-4 col-md-2" align="right">
                   <span class="" style="font-size:280%; font-weight:bold;">$ {[total_amount | number:2]}</span>
