@@ -11,6 +11,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_MIGRATE_REPO'] = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/db_repository'))
 db = SQLAlchemy(app)
+from uuid import getnode as get_mac
+mac = get_mac()
 
 @app.after_request
 def after_request(response):

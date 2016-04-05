@@ -36,7 +36,9 @@ eventas.controller('SalesController', function($scope, $filter, $http){
      //Para cuando cambien de ticket que se actualice el monto
      $scope.updateAmount = function(){
              var active = $("ul#tabSales li.active a").attr('id');
-             $scope.total_amount = update_total_amount($scope.tickets[active])
+             num = update_total_amount($scope.tickets[active])
+             $scope.total_amount = Math.round(num * 100) / 100
+             $("#total").text('$ '+$scope.total_amount);
      }
 
      //PERMITE SELECCIONAR UNA LINEA
@@ -44,7 +46,7 @@ eventas.controller('SalesController', function($scope, $filter, $http){
          var active = $("ul#tabSales li.active a").attr('id');
          tr_id = "#tr_"+active+"_"+l.id;
          $('tr').filter(function(){
-             return this.parentNode.id == 'tbody_'+active;
+             return this.parentNode.id == 'tbody_'+active();
          }).removeClass('info');
          $(tr_id).addClass("info");
          $scope.selected_line = tr_id;
@@ -52,7 +54,6 @@ eventas.controller('SalesController', function($scope, $filter, $http){
 
     //CARGA EL FORM PARA CAMBIAR CANTIDAD DE UNA LINEA
      $scope.modifyLine = function(l){
-         var active = $("ul#tabSales li.active a").attr('id');
          $scope.stock = 0;
          var current_qty = 0;
          if($scope.selected_line != false){
@@ -125,7 +126,7 @@ eventas.controller('SalesController', function($scope, $filter, $http){
 
     //AGREGAR NUEVA LINEA
       $scope.addSaleLine = function(){
-             var active = $("ul#tabSales li.active a").attr('id');
+              var active = $("ul#tabSales li.active a").attr('id');
               data = {
                       'product':$('#product_sale').val(),
                       'quantity':$scope.product_quantity,
@@ -178,7 +179,6 @@ eventas.controller('SalesController', function($scope, $filter, $http){
       };
 
       $scope.newTicket = function(){
-         var active = $("ul#tabSales li.active a").attr('id');
          tickets = $("li a.hidden");
          tickets.each(function()
          {
@@ -196,16 +196,16 @@ eventas.controller('SalesController', function($scope, $filter, $http){
 
     //ELIMINA EL TICKET ACTIVO
         $scope.deleteTicket = function(){
+        var active = $("ul#tabSales li.active a").attr('id');
         $.confirm({
             title: 'Confirmar',
             content: 'Desea eliminar el ticket actual?',
             keyboardEnabled:true,
             confirm: function(){
-                 var active = $("ul#tabSales li.active a").attr('id');
                  //Set ticket name
                  //$ticket[active] = "Ticket "+"1";
                  //Si es cualquier ticket excepto el 1, lo oculto
-                 if(active != "t1"){
+                 if($scope.active() != "t1"){
                      $('#'+active).addClass('hidden');
                      $('#div_'+active).addClass('hidden');
                      $('#tabSales a[href="#div_t1"]').tab('show') // Select tab by name

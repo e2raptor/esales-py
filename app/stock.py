@@ -3,5 +3,5 @@ from app import app
 
 @app.route('/inventario')
 def inventario():
-    data = {'server': 'http://localhost:5000/', 'stock':'active'}
+    data = {'stock':'active'}
     return render_template("stock.html",data=data)

@@ -37,32 +37,6 @@ table.table-fixedheader>thead>tr>th:after, table.table-fixedheader>tbody>tr>td:a
 </style>
 <script type="text/javascript" src="../static/app-js/sales.js"></script>
 <script type="text/javascript">
-
-function charge(){
-     console.log('Entering confirm_test');
-    // Load native UI library
-    //var gui = window.nwDispatcher.requireNwGui();
-    var gui = global.window.nwDispatcher.requireNwGui();
-    //var gui = window.require('nw.gui');
-    //var gui = require("nw.gui");
-     console.log('Surpasing require nw.gui');
-    // Get the current window
-    var win = gui.Window.get();
-    // Listen to the minimize event
-    win.on('minimize', function() {
-      console.log('Window is minimized');
-    });
-    // Minimize the window
-    win.minimize();
-    // Unlisten the minimize event
-    win.removeAllListeners('minimize');
-    // Create a new window and get it
-    var new_win = gui.Window.open('https://github.com');
-    // And listen to new window's focus event
-    new_win.on('focus', function() {
-      console.log('New window is focused');
-    });
-}
     $(document).ready(function(){
             $('#product_sale').focus();
     });
@@ -81,9 +55,12 @@ function charge(){
    $(document).bind('keydown', "f11", function nt() {
         window.location = server.concat("cobrar");
    });
+
     function show(ticket){
         if(!$('#div_'+ticket).hasClass('hidden')){
             $('#tabSales a[href="#div_'+ticket+'"]').tab('show') // Select tab by name
+            angular.element($('#SalesController')).scope().active();
+            angular.element($('#SalesController')).scope().updateAmount();
             $('#product_sale').focus();
         };
         return false;
@@ -120,7 +97,7 @@ function charge(){
        return show('t10');
    });
 </script>
-<div ng-controller="SalesController" >
+<div ng-controller="SalesController" id="SalesController" >
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">GESTIÓN DE VENTAS</h3>
@@ -161,8 +138,8 @@ function charge(){
             </div>
 
             <!--SALES-DATATABLE-->
-            <ul class="nav nav-tabs" id="tabSales" ng-click="updateAmount()" >
-              <li class="active">
+            <ul class="nav nav-tabs" id="tabSales" >
+              <li class="active" >
                 <a ng-href="#div_t1" data-toggle="tab" id="t1">Ticket 1</a>
               </li>
               <li>
@@ -591,15 +568,23 @@ function charge(){
                         <span class="glyphicon glyphicon-trash"></span> DEL Eliminar Ticket</a>
               </div>
               <div class="col-xs-8 col-md-6" align="right" >
-                    <a class="btn btn-primary btn-lg" href="cobrar" data-toggle="tooltip" id="cobrar"
+                  <a class="btn btn-primary btn-lg" href="cobrar" data-toggle="tooltip" id="cobrar"
                         title="Cobra la venta indicando forma de pago">
                         <span class="glyphicon glyphicon-usd"></span> F11 COBRAR</a>
               </div>
               <div class="col-xs-4 col-md-2" align="right">
-                  <span class="" style="font-size:280%; font-weight:bold;">$ {[total_amount | number:2]}</span>
+                  <span id="total" style="font-size:280%; font-weight:bold;">$ 0.00</span>
               </div>
             </div>
   </div><!--panel-body-->
 </div><!--panel-->
+<script>
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var target = $(e.target).attr("id"); // activated tab
+      $("a#cobrar").attr('href', '/cobrar?ticket='+act);
+      angular.element($("#SalesController")).scope().updateAmount();
+      $('#product_sale').focus();
+    });
+</script>
 </div> <!--end-controller-->
 {% endblock %}

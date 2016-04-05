@@ -1,10 +1,144 @@
 {% extends "base.html" %}
 {% block body %}
+<script type="text/javascript" src="../static/app-js/stock.js"></script>
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">GESTIÓN DE INVENTARIO</h3>
   </div>
+  <div ng-controller="StockController" id="StockController">
   <div class="panel-body">
-  </div>
-</div>
+    <!--TAB SECTION-->
+    <ul class="nav nav-tabs" id="tabsStock">
+      <li class="active">
+        <a ng-href="#new" data-toggle="tab">Agregar Inventario (F7)</a>
+      </li>
+      <li >
+        <a ng-href="#list" data-toggle="tab">Ver Inventarios (F8)</a>
+      </li>
+    </ul>
+
+    <!--INVENTARIO NUEVO-->
+    <div class="tab-content">
+        <div class="tab-pane active" id="new">
+            <br>
+            <div id="alert-add" class="alert alert-success" style="display:none;" role="alert">CLIENTE REGISTRADO CON &Eacute;XITO</div>
+            <div id="alert-upd" class="alert alert-success" style="display:none;" role="alert">CLIENTE MODIFICADO CON &Eacute;XITO</div>
+            <div class="well well-sm" style="">
+                <form class="form-horizontal">
+                    <table cellpadding="1" border="0" style=" border-collapse: separate; border-spacing: 5px; ">
+                        <tr>
+                            <td>C&oacute;digo Producto:</td>
+                            <td>
+                                <input type="text" 
+                                        class="autocomplete" 
+                                        placeholder="Código / Nombre" 
+                                        auto-complete 
+                                        id="code"
+                                        ng-model="code">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Descripci&oacute;n: </td>
+                            <td>{[description]}</td>
+                        </tr>
+                        <tr>
+                            <td>Cantidad Actual:</td>
+                            <td>{[current_qty]}</td>
+                        </tr>
+                        <tr>
+                            <td>Cantidad: </td>
+                            <td>
+                                <input ng-model="new_quantity" type="number" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button class="btn btn-primary" ng-click="addStock()" type="submit">Guardar</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div><!--Tan-nuevo-->
+    <!--LISTA -->
+        <div class="tab-pane" id="list">
+            <br>
+            <!--Search-->
+            <div class="well well-sm">
+                <input type="search" 
+                        class="form-control" 
+                        id="search_input"
+                        ng-model="search_filter"
+                        placeholder="Teclee (Nombre, Cedula o RUC) para buscar el cliente">
+            </div> <!--Search-->
+            <div style="overflow: auto; height:300px">
+                 <table class="table table-bordered table-striped table-condensed table-hover">
+                        <thead>
+                            <tr style="background-color:#FFF6A7">
+                                <th>
+                                  <a href="#" ng-click="orderByField='name'; reverseSort = !reverseSort">
+                                      Nombre Completo
+                                      <span ng-show="orderByField == 'name'">
+                                          <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                          <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                      </span>
+                                  </a>
+                                </th>
+                                <th>
+                                  <a href="#" ng-click="orderByField='vat'; reverseSort = !reverseSort">
+                                      Indentificaci&oacute;n
+                                      <span ng-show="orderByField == 'vat'">
+                                          <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                          <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                      </span>
+                                  </a>
+                                </th>
+                                <th>
+                                  <a href="#" ng-click="orderByField='vat_type'; reverseSort = !reverseSort">
+                                      Tipo ID
+                                      <span ng-show="orderByField == 'vat_type'">
+                                          <i class="icon-chevron-up" ng-show="!reverseSort"></i>
+                                          <i class="icon-chevron-down" ng-show="reverseSort"></i>
+                                      </span>
+                                  </a>
+                                </th>
+                                <th>Lim. Cr&eacute;dito</th>
+                                <th>Ver Est. Cuentas</th>
+                                <th>Modificar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr ng-repeat="c in clients| orderBy:orderByField:reverseSort | filter: search_filter">
+                                <td>{[c.name]}</td>
+                                <td>{[c.vat]}</td>
+                                <td>{[getVat(c.vat_type)]}</td>
+                                <td>{[c.credit_limit]}</td>
+                                <td>
+                                    <a ng-click="accountState(c)" href="#">
+                                        <span class="glyphicon glyphicon-folder-open icon-white"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a ng-click="editClient(c)">
+                                        <span class="glyphicon glyphicon-edit icon-white"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a ng-click="deleteClient(c)">
+                                            <span class="glyphicon glyphicon-trash icon-white"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div><!--Tab-list-->
+    </div> <!--Tab-content-->
+  </div><!--panel-body-->
+  </div><!--div-controller-->
+</div><!--panel-->
 {% endblock %}

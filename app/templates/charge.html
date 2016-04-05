@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block body %}
-<script type="text/javascript" src="../static/app-js/products.js"></script>
+<script type="text/javascript" src="../static/app-js/charge.js"></script>
 <script type="text/javascript">
+    $(document).ready(function(){
+        $('#total').text("$ {{data['amount']}}")
+        $('#input_cash').focus();
+    });
+
    $(document).bind('keydown', "ctrl+e", function nuevo() {
         $('#tabsProd a[href="#cash"]').tab('show') // Select tab by name
         $('#input_cash').focus();
@@ -17,7 +22,7 @@
         $('#tabsProd a[href="#mixed"]').tab('show') // Select tab by name
    });
 </script>
-<div ng-controller="ProductController">
+<div ng-controller="ChargeController">
 
     <div class="row">
         <div class="col-md-8">
@@ -262,7 +267,7 @@
               </div>
               <div class="panel-body" style="background:#ECF0F6;">
                   <div align="center">
-                      <span class="" style="font-size:380%; font-weight:bold;">$ 0.00</span>
+                      <span class="" style="font-size:380%; font-weight:bold;" id="total">$ 0.00</span>
                     <br>
                     <br>
                     <button type="button" class="btn btn-default btn-lg btn-block">
